@@ -1,0 +1,27 @@
+*{
+  margin: 0;
+  padding: 0; 
+  box-sizing: border-box;
+}
+
+.custom-container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.form-group{
+  margin-bottom: 10px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.login-card{
+  width: 50%;
+  height: 50vh;
+  border: solid red 1px;
+}
