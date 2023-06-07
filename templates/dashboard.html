@@ -1,0 +1,52 @@
+<html>
+  <head>
+    <title> Profile </title>
+    <link rel="stylesheet" href="{{url_for('static', filename='bootstrap/bootstrap.min.css')}}">
+  </head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-time active"> 
+          <a href="/Forum" class="nav-link">Forum</a>
+        </li>
+        <li class="nav-time active"> 
+          <a href="/profile" class="nav-link">Profile</a>
+        </li>
+        <li class="nav-time active"> 
+          <a href="/login" class="nav-link">Login</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container">
+      <div class="text-center">
+        <h1> Welcome {{tempuser.username}} </h1>
+        <a href="/logout"> logout </a>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <script>
+          alert("{{ messages[0] }}");
+        </script>
+        {% endif %}
+        {% endwith %}
+        <form method="POST">
+          {{ form.hidden_tag() }}
+          <div class='form-group'>
+            {{ form.title.label }}
+            {{ form.title() }}
+          </div>
+          <div class='form-group'>
+            {{ form.text.label }}
+            {{ form.text() }}
+          </div>
+          {{ form.submit() }}
+        </form>
+        {% for i in list %}
+        {{i}}
+        <br>
+        {% endfor %}
+      </div>
+  </div>
+</body>
+</html>

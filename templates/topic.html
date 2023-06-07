@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <title> {{ current_post.title }} </title>
+    <link rel="stylesheet" href="{{url_for('static', filename='bootstrap/bootstrap.min.css')}}">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-time active"> 
+            <a href="/Forum" class="nav-link">Forum</a>
+          </li>
+          <li class="nav-time active"> 
+            <a href="/profile" class="nav-link">Profile</a>
+          </li>
+          <li class="nav-time active"> 
+            <a href="/login" class="nav-link">Login</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container">
+        <h1> {{ current_post.title}} </h1> 
+        {{current_post.showtime()}}
+        {{ current_post}}
+        <br>
+        {{ current_post.text }}  
+        <br>
+        <h1> Comment Section: </h1>
+        {% for i in comment_list %}
+          {{ i }}
+          <br>
+          {{ i.text }}
+          <br>
+        {% endfor %}
+
+        <form method="POST">
+          {{ form.hidden_tag() }}
+          {{ form.text.label }}
+          {{ form.text() }}
+          {{ form.submit() }}
+        </form>
+    </div>
+  </body>
+</html>
