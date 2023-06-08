@@ -107,7 +107,7 @@ def login():
                 return redirect(url_for('login'))
         else: flash('There is no such user')
         return redirect(url_for('login'))
-    return render_template("login.html", form=form)
+    return render_template("login.html", form=form, route='login')
 
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
@@ -150,10 +150,9 @@ def register():
         else:
             flash('Such username already exists')
             return redirect(url_for("register"))
-    return render_template("login.html", form=form)
+    return render_template("login.html", form=form, route='register')
 
 @app.route('/Forum')
-@login_required
 def forum():
     post_list = Post.query.all()
     return render_template("Forum.html", list=post_list)
