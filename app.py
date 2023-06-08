@@ -24,7 +24,7 @@ class LoginForm(FlaskForm):
 
 class NoteForm(FlaskForm):
     text = StringField("Text", validators=[DataRequired()])
-    submit = SubmitField("Submit")
+    submit = SubmitField("Submit", render_kw={'class' : 'btn btn-primary'})
 
 class PostForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])

@@ -1,18 +1,26 @@
 <html>
   <head>
-    <link rel="stylesheet" href="{{url_for('static', filename='bootstrap/bootstrap.min.css')}}">
+    <title>Forum</title>
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', filename='bootstrap/bootstrap.min.css')}}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{url_for('static', filename='styles/style.css')}}"
+    />
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-          <li class="nav-time active"> 
+          <li class="nav-time active">
             <a href="/Forum" class="nav-link">Forum</a>
           </li>
-          <li class="nav-time active"> 
+          <li class="nav-time active">
             <a href="/profile" class="nav-link">Profile</a>
           </li>
-          <li class="nav-time active"> 
+          <li class="nav-time active">
             <a href="/login" class="nav-link">Login</a>
           </li>
         </ul>
@@ -20,8 +28,16 @@
     </nav>
     <div class="container">
       {% for element in list %}
-        <a href="{{ url_for('blog', ID_POST=element.id) }}">{{ element.title }}</a>
-        <br>
+      <div class="shadow-lg p-5 my-5 rounded">
+        <h2>{{element.title}}</h2>
+        <h3> created by {{element.author}} </h3>
+        <button class="btn btn-secondary">
+          <a href="{{ url_for('blog', ID_POST=element.id) }}" class="white-text">
+            view page
+          </a>
+        </button>
+        <p> {{element.timestamp}} </p>
+      </div>
       {% endfor %}
     </div>
   </body>
