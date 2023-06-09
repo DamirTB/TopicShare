@@ -129,7 +129,7 @@ def dashboard():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("index"))
+    return redirect(url_for("login"))
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -154,8 +154,9 @@ def register():
 
 @app.route('/Forum')
 def forum():
+    user = current_user
     post_list = Post.query.all()
-    return render_template("Forum.html", list=post_list)
+    return render_template("Forum.html", list=post_list, user=user)
 
 @app.route('/Forum/<ID_POST>', methods=["GET", "POST"])
 @login_required
@@ -169,3 +170,13 @@ def blog(ID_POST):
         db.session.commit()
         return redirect(url_for('blog', ID_POST=ID_POST))
     return render_template("topic.html", current_post=current_post, form=comment_form, comment_list=comment_list)
+
+@app.route('/delete_blog/<ID_POST>')
+@login_required
+def delete_blog(ID_POST):
+    current_post = Post.query.get(ID_POST)
+    if current_post and current_post.user_id == current_user.id:
+        db.session.delete(current_post)
+        db.session.commit()
+        return redirect('forum')
+    return redirect('forum')
