@@ -178,5 +178,4 @@ def delete_blog(ID_POST):
     if current_post and current_post.user_id == current_user.id:
         db.session.delete(current_post)
         db.session.commit()
-        return redirect('forum')
-    return redirect('forum')
+    return redirect(url_for('forum'))
