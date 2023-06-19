@@ -1,4 +1,5 @@
 tester.py
 static/
-__pycache__/app.cpython-311.pyc]
+__pycache__/
 instance/
+templates/edit_post.html
