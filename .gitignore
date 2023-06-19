@@ -1,2 +1,4 @@
 tester.py
-__pycache__/
+static/
+__pycache__/app.cpython-311.pyc]
+instance/
