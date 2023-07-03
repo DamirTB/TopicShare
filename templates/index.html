@@ -12,10 +12,16 @@
             <a href="/Forum" class="nav-link">Forum</a>
           </li>
           <li class="nav-time active"> 
-            <a href="/profile" class="nav-link">Profile</a>
+            {% if current_user.is_authenticated %}
+              <a href="/profile" class="nav-link"> {{current_user.username}} </a>
+            {% endif %}
           </li>
           <li class="nav-time active"> 
-            <a href="/login" class="nav-link">Login</a>
+            {% if current_user.is_authenticated %}
+              <a href="/logout" class="nav-link"> Logout </a>
+            {% else %}
+              <a href="/login" class="nav-link"> Login </a>
+            {% endif %}
           </li>
         </ul>
       </div>

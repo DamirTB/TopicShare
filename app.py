@@ -3,6 +3,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, TextAreaField
 from wtforms.validators import DataRequired, InputRequired, Length
 from flask_sqlalchemy import SQLAlchemy
+from flask_admin import Admin, BaseView, expose, AdminIndexView
+from flask_admin.contrib.sqla import ModelView
 from flask_login import UserMixin, LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
@@ -17,19 +19,20 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
+
 class LoginForm(FlaskForm):
     username = StringField("", validators=[DataRequired()], render_kw={'placeholder': 'username'})
     password = PasswordField("", validators=[DataRequired()], render_kw={'placeholder' : 'password'})
     submit = SubmitField("Enter", render_kw={'class' : 'btn btn-primary'})
 
 class NoteForm(FlaskForm):
-    text = StringField("Text", validators=[DataRequired()])
+    text = TextAreaField("Text", validators=[DataRequired()], render_kw={"rows": 4, "cols": 30, 'class' : 'form-control'})
     submit = SubmitField("Submit", render_kw={'class' : 'btn btn-primary'})
 
 class PostForm(FlaskForm):
-    title = StringField("Title", validators=[DataRequired()])
-    text = TextAreaField("Text", validators=[DataRequired()], render_kw={"rows": 5, "cols": 50})
-    submit = SubmitField("Submit")
+    title = StringField("Title", validators=[DataRequired()], render_kw={'class' : 'form-control'})
+    text = TextAreaField("Text", validators=[DataRequired()], render_kw={"rows": 10, "cols": 30, 'class' : 'form-control'})
+    submit = SubmitField("Submit", render_kw={'class' : 'btn btn-primary'})
 
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -44,6 +47,9 @@ class Comment(db.Model):
     post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
     text = db.Column(db.String(1000), nullable=False)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    def showtime(self):
+        formatted_timestamp = self.timestamp.strftime("%d %B %Y")
+        return f"{formatted_timestamp}"
     def __repr__(self):
         user = User.query.get(self.user_id)
         formatted_timestamp = self.timestamp.strftime("%d %B %Y")
@@ -73,6 +79,23 @@ class User(UserMixin, db.Model):
     posts = db.relationship('Post', backref='user') 
     def __repr__(self):
         return f"<{self.username}>"
+
+class Anypageview(BaseView):
+    @expose('/')
+    def anypage(self):
+        return self.render('admin/anypage/index.html')
+
+class Dashboardview(AdminIndexView):
+    @expose('/')
+    @login_required
+    def add_data_db(self):
+        return self.render('admin/dashboard_admin.html') 
+
+admin = Admin(app, template_mode='bootstrap4', index_view=Dashboardview())
+admin.add_view(ModelView(User, db.session, name="Users"))
+admin.add_view(ModelView(Post, db.session, name="Posts"))
+admin.add_view(ModelView(Comment, db.session, name="Comments"))
+admin.add_view(Anypageview(name="Something else"))
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -113,18 +136,19 @@ def login():
 @login_required
 def profile():
     form = PostForm()
+    list_posts = current_user.posts
     if form.validate_on_submit():
         newPost = Post(text=form.text.data, title=form.title.data, user_id=current_user.id, author=current_user.username)
         db.session.add(newPost)
         db.session.commit()
         return redirect(url_for('blog', ID_POST=newPost.id))
-    return render_template('dashboard.html', tempuser=current_user, form=form)
+    return render_template('dashboard.html', tempuser=current_user, form=form, list=list_posts)
 
 """ @app.route('/dashboard')
 @login_required 
 def dashboard():
     return render_template("dashboard.html") """
-    
+
 @app.route('/logout')
 @login_required
 def logout():
@@ -156,6 +180,7 @@ def register():
 def forum():
     user = current_user
     post_list = Post.query.all()
+    post_list.sort(key=lambda x : x.timestamp, reverse=True)
     return render_template("Forum.html", list=post_list, user=user)
 
 @app.route('/Forum/<ID_POST>', methods=["GET", "POST"])
@@ -179,3 +204,16 @@ def delete_blog(ID_POST):
         db.session.delete(current_post)
         db.session.commit()
     return redirect(url_for('forum'))
+
+@app.route('/update_blog/<ID_POST>', methods=["GET", "POST"])
+@login_required
+def update_blog(ID_POST):
+    current_post = Post.query.get(ID_POST)
+    form = PostForm()
+    if current_post and current_post.user_id == current_user.id: 
+        if form.validate_on_submit():
+            current_post.text = form.text.data
+            current_post.title = form.title.data
+            db.session.commit()
+            return redirect(url_for('blog', ID_POST=ID_POST))
+    return render_template('edit_post.html', form=form)

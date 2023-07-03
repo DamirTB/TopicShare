@@ -11,7 +11,9 @@
             <a href="/Forum" class="nav-link">Forum</a>
           </li>
           <li class="nav-time active"> 
-            <a href="/profile" class="nav-link">Profile</a>
+            {% if current_user.is_authenticated %}
+              <a href="/profile" class="nav-link"> {{current_user.username}} </a>
+            {% endif %}
           </li>
           <li class="nav-time active"> 
             <a href="/login" class="nav-link">Login</a>
@@ -28,12 +30,13 @@
         <br>
         <h1> Comment Section: </h1>
         {% for i in comment_list %}
-          {{ i }}
-          <br>
-          {{ i.text }}
-          <br>
+          <div class="shadow p-5 my-5">
+            {{ i }}
+            <br>
+            {{ i.text }}
+            <br>
+          </div>
         {% endfor %}
-
         <form method="POST">
           {{ form.hidden_tag() }}
           {{ form.text.label }}
