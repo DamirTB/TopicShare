@@ -10,7 +10,9 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mydb.db"
+#app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mydb.db" 
+# I decided to switch to postgresql database system here insteda of using sqlite
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:63626167@localhost/mydb'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = "12345678"
 
@@ -184,16 +186,19 @@ def forum():
     return render_template("Forum.html", list=post_list, user=user)
 
 @app.route('/Forum/<ID_POST>', methods=["GET", "POST"])
-@login_required
 def blog(ID_POST):
     comment_form = NoteForm()
     current_post = Post.query.filter_by(id=ID_POST).first()
     comment_list = current_post.comments
-    if comment_form.validate_on_submit():
-        new_comment = Comment(text=comment_form.text.data, user_id=current_user.id, post_id=ID_POST)
-        db.session.add(new_comment)
-        db.session.commit()
-        return redirect(url_for('blog', ID_POST=ID_POST))
+    if request.method == 'POST':
+        if current_user.is_authenticated:
+            if comment_form.validate_on_submit():
+                new_comment = Comment(text=comment_form.text.data, user_id=current_user.id, post_id=ID_POST)
+                db.session.add(new_comment)
+                db.session.commit()
+                return redirect(url_for('blog', ID_POST=ID_POST))
+        else:
+            return redirect(url_for('register'))
     return render_template("topic.html", current_post=current_post, form=comment_form, comment_list=comment_list)
 
 @app.route('/delete_blog/<ID_POST>')
@@ -216,4 +221,6 @@ def update_blog(ID_POST):
             current_post.title = form.title.data
             db.session.commit()
             return redirect(url_for('blog', ID_POST=ID_POST))
+    form.title.data = current_post.title
+    form.text.data = current_post.text
     return render_template('edit_post.html', form=form)

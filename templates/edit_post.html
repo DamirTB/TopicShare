@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title> {{ current_post.title }} </title>
+    <title> Edit post </title>
     <link rel="stylesheet" href="{{url_for('static', filename='bootstrap/bootstrap.min.css')}}">
   </head>
   <body>
@@ -22,29 +22,18 @@
       </div>
     </nav>
     <div class="container">
-        <h1> {{ current_post.title}} </h1> 
-        {{current_post.showtime()}}
-        {{ current_post}}
-        <br>
-        {{ current_post.text }}  
-        <br>
-        <h1> Comment Section: </h1>
-        {% for i in comment_list %}
-          <div class="shadow p-5 my-5">
-            {{ i }}
-            <br>
-            {{ i.text }}
-            <br>
-          </div>
-        {% endfor %}
-        <form method="POST">
-          {{ form.hidden_tag() }}
-          <div class="form-group">
-            {{ form.text.label }}
-            {{ form.text() }}
-          </div>
-          {{ form.submit() }}
-        </form>
+      <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+          {{ form.title.label }}
+          {{ form.title() }}
+        </div>
+        <div class="form-group">
+          {{ form.text.label }}
+          {{ form.text() }}
+        </div>
+        {{ form.submit() }}
+      </form>
     </div>
     {% with messages = get_flashed_messages() %} {% if messages %}
         <script>

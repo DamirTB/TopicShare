@@ -2,5 +2,4 @@ tester.py
 static/
 __pycache__/
 instance/
-templates/edit_post.html
 env/
