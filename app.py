@@ -8,6 +8,8 @@ from flask_admin.contrib.sqla import ModelView
 from flask_login import UserMixin, LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 app = Flask(__name__)
 #app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mydb.db" 
@@ -15,6 +17,13 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:63626167@localhost/mydb'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = "12345678"
+
+limiter = Limiter(
+    get_remote_address,
+    app=app,
+    default_limits=["100 per minute"],
+    storage_uri="memory://",
+)
 
 db = SQLAlchemy(app)
 
@@ -114,6 +123,10 @@ def page_not_found(e):
 @app.errorhandler(503)
 def server_overloaded(e):
     return "Server is down"
+
+@app.errorhandler(429)
+def too_many_request(e):
+    return "Too many request"
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
