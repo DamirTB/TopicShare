@@ -29,7 +29,20 @@
 .login-card{
   padding: 200px;
   width: 50%;
-  height: 100vh;
-  background-color: white
+  height: 100vh;/* 
+  background-color: blue */
 /*   border: solid red 1px;
  */}
+
+ .reg {
+  margin: 10px;
+  /* Add additional CSS properties to move the object */
+  position: relative;
+  top: 5px;
+}
+
+footer.fixed-bottom {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}

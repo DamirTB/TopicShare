@@ -1,0 +1,45 @@
+<html>
+  <head>
+    <head>
+      <link rel="stylesheet" href="{{url_for('static', filename='bootstrap/bootstrap.min.css')}}" />
+      <link rel="stylesheet" href="{{url_for('static', filename='styles/style.css')}}" />
+    </head>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-time active">
+            <a href="/Forum" class="nav-link">Forum</a>
+          </li>
+          <li class="nav-time active">
+            <a href="/login" class="nav-link">Login</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <div class="custom-container">
+      <div class="login-card">
+        <div class="text-center">
+          <h1> Register </h1>
+        </div>
+        <form method="POST">
+          {{ form.hidden_tag() }}
+          <div class="form-group">
+            {{ form.username.label }} {{ form.username() }}
+          </div>
+          <div class="form-group">
+            {{ form.password.label }} {{ form.password() }}
+          </div>
+          <div class="form-group">
+            {{ form.password_repeat.label }} {{ form.password_repeat() }}
+            {% if form.errors.password_repeat %}
+               <small class="text-danger"> {{ form.errors.password_repeat[0] }} </small>
+            {% endif %}
+          </div>
+          {{ form.submit() }}
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

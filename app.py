@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, validators
 from wtforms.validators import DataRequired, InputRequired, Length
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin, BaseView, expose, AdminIndexView
@@ -31,10 +31,19 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
 
+class RegisterForm(FlaskForm):
+    username = StringField("", validators=[DataRequired()], render_kw={'placeholder': 'username', 'class' : 'form-control'})
+    password = PasswordField("", validators=[DataRequired()], render_kw={'placeholder': 'password', 'class' : 'form-control'})
+    password_repeat = PasswordField("", 
+                                    validators=[DataRequired(), 
+                                    validators.EqualTo('password', message='Password must match')], 
+                                    render_kw={'placeholder': 'password', 'class' : 'form-control'})
+    submit = SubmitField("Enter", render_kw={'class' : 'btn btn-primary form-control '})
+
 class LoginForm(FlaskForm):
-    username = StringField("", validators=[DataRequired()], render_kw={'placeholder': 'username'})
-    password = PasswordField("", validators=[DataRequired()], render_kw={'placeholder' : 'password'})
-    submit = SubmitField("Enter", render_kw={'class' : 'btn btn-primary'})
+    username = StringField("", validators=[DataRequired()], render_kw={'placeholder': 'username', 'class' : 'form-control'})
+    password = PasswordField("", validators=[DataRequired()], render_kw={'placeholder' : 'password', 'class' : 'form-control'})
+    submit = SubmitField("Enter", render_kw={'class' : 'btn btn-primary form-control '})
 
 class NoteForm(FlaskForm):
     text = TextAreaField("Text", validators=[DataRequired()], render_kw={"rows": 4, "cols": 30, 'class' : 'form-control'})
@@ -129,6 +138,7 @@ def too_many_request(e):
     return "Too many request"
 
 @app.route('/login', methods=['GET', 'POST'])
+@limiter.limit('100 per hour')
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('profile'))
@@ -145,7 +155,7 @@ def login():
                 return redirect(url_for('login'))
         else: flash('There is no such user')
         return redirect(url_for('login'))
-    return render_template("login.html", form=form, route='login')
+    return render_template("login.html", form=form)
 
 @app.route('/profile', methods=['GET', 'POST'])
 @login_required
@@ -174,7 +184,7 @@ def logout():
 def register():
     if current_user.is_authenticated:
         return redirect(url_for('profile'))
-    form = LoginForm()
+    form = RegisterForm()
     if form.validate_on_submit():
         existing_user = User.query.filter_by(username=form.username.data).first()
         if existing_user is None:
@@ -189,7 +199,7 @@ def register():
         else:
             flash('Such username already exists')
             return redirect(url_for("register"))
-    return render_template("login.html", form=form, route='register')
+    return render_template("register.html", form=form)
 
 @app.route('/Forum')
 def forum():
