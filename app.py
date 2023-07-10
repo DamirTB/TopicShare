@@ -14,15 +14,8 @@ from flask_limiter.util import get_remote_address
 app = Flask(__name__)
 #app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mydb.db" 
 # I decided to switch to postgresql database system here insteda of using sqlite
-<<<<<<< HEAD
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://jmypwdhfrsidru:1893a34fea121ff8a0f2beb4212b3974a6390cc827fda96d9d90ab86cb6d981f@ec2-3-208-74-199.compute-1.amazonaws.com:5432/dckrqrttcqnt7g'
-=======
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:63626167@localhost/mydb'
-
-#Here I changed my SQLALCHEMY_database_uri to another database for deploying my app on heroku
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://ojeallicxnrgys:8592a4eea0e786a48a10b9d31acafd697e266f87800a48ab19ec12d42ca1bf98@ec2-3-233-174-23.compute-1.amazonaws.com:5432/df5aoalf88a4s6'
-
->>>>>>> 1449c967231d09dbccdda9f9888020b13c83ec3b
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://jmypwdhfrsidru:1893a34fea121ff8a0f2beb4212b3974a6390cc827fda96d9d90ab86cb6d981f@ec2-3-208-74-199.compute-1.amazonaws.com:5432/dckrqrttcqnt7g'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = "12345678"
 
