@@ -14,7 +14,7 @@ from flask_limiter.util import get_remote_address
 app = Flask(__name__)
 #app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mydb.db" 
 # I decided to switch to postgresql database system here insteda of using sqlite
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:63626167@localhost/mydb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://jmypwdhfrsidru:1893a34fea121ff8a0f2beb4212b3974a6390cc827fda96d9d90ab86cb6d981f@ec2-3-208-74-199.compute-1.amazonaws.com:5432/dckrqrttcqnt7g'
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = "12345678"
 
