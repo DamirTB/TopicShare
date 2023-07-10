@@ -2,4 +2,3 @@ tester.py
 static/
 __pycache__/
 instance/
-env/
