@@ -17,7 +17,7 @@ app = Flask(__name__)
 #app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:63626167@localhost/mydb'
 
 #Here I changed my SQLALCHEMY_database_uri to another database for deploying my app on heroku
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://heevlndbzztxrl:15cd81c926cd3f83117541d0bf3b9eee8c71aa17bfaddcd4f6dbcddb81ee8e1e@ec2-34-226-11-94.compute-1.amazonaws.com:5432/df9a2libbtuf66'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://ojeallicxnrgys:8592a4eea0e786a48a10b9d31acafd697e266f87800a48ab19ec12d42ca1bf98@ec2-3-233-174-23.compute-1.amazonaws.com:5432/df5aoalf88a4s6'
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = "12345678"
