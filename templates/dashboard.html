@@ -29,46 +29,57 @@
           </li>
           <li class="nav-time active">
             {% if current_user.username == "Damir" %}
-            <a href="{{url_for('admin.add_data_db')}}" class="nav-link"> admin interface </a>
+            <a href="{{url_for('admin.add_data_db')}}" class="nav-link">
+              admin interface
+            </a>
             {% endif %}
           </li>
         </ul>
       </div>
     </nav>
     <div class="container">
-      <div class="text-center">
-        <h1>Welcome {{tempuser.username}}</h1>
-        {% with messages = get_flashed_messages() %} {% if messages %}
+      {% for message in get_flashed_messages() %}
+      <div class="alert alert-success">{{ message }}</div>
+      {% endfor %}
+      <h1>Welcome {{tempuser.username}}</h1>
+      <!-- {% with messages = get_flashed_messages() %} {% if messages %}
         <script>
           alert("{{ messages[0] }}");
         </script>
-        {% endif %} {% endwith %}
-        <div class="row">
-          <div class="col">
-            <button class="btn btn-primary" id="showbtn">Write a new post</button>
-            <form method="POST" style="display:none" id="myform">
-              {{ form.hidden_tag() }}
-              <div class="form-group">
-                {{ form.title.label }} {{ form.title() }}
-              </div>
-              <div class="form-group">
-                {{ form.text.label }} {{ form.text() }}
-              </div>
-              {{ form.submit() }}
-            </form>
+        {% endif %} {% endwith %} -->
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <div class="card-header">{{current_user.username}}</div>
+            <div class="card-body">
+              <h5 class="card-title">About yourself</h5>
+              <strong>Username: </strong> {{current_user.username}} <br>
+              <strong>Date Joined</strong> {{current_user.date_joined}} <br>
+              <a href="/logout" class="btn btn-danger">Logout</a>
+              <!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a> -->
+            </div>
           </div>
-          <div class="col">
-            <h1> My recent Posts </h1>
-            {% for i in list %}
-              <a href="{{url_for('blog', ID_POST=i.id)}}">{{i.title}}</a>
-              <br>
-            {% endfor %}
-          </div>
+        </div>
+        <div class="col">
+          <button class="btn btn-primary btn-lg" id="showbtn">
+            Write a new post
+          </button>
+          <form method="POST" style="display: none" id="myform">
+            {{ form.hidden_tag() }}
+            <div class="form-group">
+              {{ form.title.label }} {{ form.title() }}
+            </div>
+            <div class="form-group">
+              {{ form.text.label }} {{ form.text() }}
+            </div>
+            {{ form.submit() }}
+          </form>
         </div>
       </div>
     </div>
     <script>
-      document.getElementById("showbtn").addEventListener("click", function() {
+      document.getElementById("showbtn").addEventListener("click", function () {
         var form = document.getElementById("myform");
         showbtn.style.display = "none";
         if (form.style.display === "none") {
@@ -78,11 +89,16 @@
         }
       });
     </script>
-        <footer class="bg-dark text-center text-lg-start fixed-bottom">
-          <div class="text-center p-3 text-white" style="background-color: rgba(0, 0, 0, 0.2);">
-            © 2023 Made by
-            <a class="text-white" href="https://github.com/DamirTB">Damir Talipov</a>
-          </div>
-        </footer>
+    <footer class="bg-dark text-center text-lg-start fixed-bottom">
+      <div
+        class="text-center p-3 text-white"
+        style="background-color: rgba(0, 0, 0, 0.2)"
+      >
+        © 2023 Made by
+        <a class="text-white" href="https://github.com/DamirTB"
+          >Damir Talipov</a
+        >
+      </div>
+    </footer>
   </body>
 </html>

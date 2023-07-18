@@ -1,5 +1,6 @@
 <html>
   <head>
+    <title> Login page </title>
     <link
       rel="stylesheet"
       href="{{url_for('static', filename='bootstrap/bootstrap.min.css')}}"
@@ -26,6 +27,7 @@
     <div class="custom-container">
       <div class="login-card">
         <div class="text-center">
+          
           <h1>Login</h1>
         </div>
         <form method="POST" class="text-center">
@@ -41,11 +43,11 @@
         <div class="text-center">
           <a href="/register" class="reg btn btn-info"> Don't have an account? </a>
         </div>
-        {% with messages = get_flashed_messages() %} {% if messages %}
-        <script>
-          alert("{{ messages[0] }}");
-        </script>
-        {% endif %} {% endwith %}
+        {% for message in get_flashed_messages() %}
+          <div class="alert alert-danger">
+            {{ message }}
+          </div>
+        {% endfor %}
       </div>
     </div>
     <footer class="bg-dark text-center text-lg-start fixed-bottom">
@@ -54,7 +56,6 @@
         © 2023 Made by
         <a class="text-white" href="https://github.com/DamirTB">Damir Talipov</a>
       </div>
-      <!-- Copyright -->
     </footer>
   </body>
 </html>
