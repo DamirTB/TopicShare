@@ -11,7 +11,17 @@ TopicShare is a web application developed using the Flask framework. It serves a
   1. create a virtual environment `py -3 -m venv env`
   2. activate your virtual environment `env\Scripts\activate`
   3. install all required packages `pip install -r requirements.txt`
-  4. Type into your terminal this command `SET FLASK_APP=app.py` then type `flask shell`. Afterwards a flask shell will pop out, and you need to write these commands
+  4. Configure your postgresql database URI:
+   ```
+   app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://username:password@localhost/your_db_name" 
+
+   ```
+   or you could just use sqlite by default
+   ```
+   app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mydb.db"
+
+   ```
+  5. Type into your terminal this command `SET FLASK_APP=app.py` then type `flask shell`. Afterwards a flask shell will pop out, and you need to write these commands
   ```
   from app import app, mydb
 
