@@ -247,3 +247,6 @@ def update_blog(ID_POST):
     form.title.data = current_post.title
     form.text.data = current_post.text
     return render_template('edit_post.html', form=form)
+
+if __name__=="__main__":
+    app.run(host="0.0.0.0", port=80)
