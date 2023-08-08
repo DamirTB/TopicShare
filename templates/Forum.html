@@ -33,22 +33,44 @@
       </div>
     </nav>
     <div class="container">
-      {% for element in list %}
-      <div class="shadow-lg p-5 my-5 rounded">
-        <h2>{{element.title}}</h2>
-        <h3> created by {{element.author}} </h3>
-        <a href="{{ url_for('blog', ID_POST=element.id) }}" class="white-text btn btn-outline-secondary">
-          View page
-        </a>
-        {% if user.username == element.author %}
-        <a href="{{url_for('delete_blog', ID_POST=element.id)}}" class="btn btn-outline-danger"> Delete post </a> 
-        {% endif %}
-        {% if user.username == element.author %}
-        <a href="{{url_for('update_blog', ID_POST=element.id)}}" class="btn btn-outline-primary"> Update post </a>
-        {% endif %}
-        <p> {{element.showtime()}} </p>
-      </div>
-      {% endfor %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Author</th>
+            <th scope="col">Date created</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for element in list %}
+            <tr>
+              <td scope="col">
+                <a href="{{ url_for('blog', ID_POST=element.id) }}">
+                  {{element.title}}
+                </a>
+              </td>
+              <td>{{element.author}}</td>
+              <td>{{element.showtime()}}</td>
+                <td> 
+                  {% if user.username == element.author %}
+                  <a href="{{url_for('delete_blog', ID_POST=element.id)}}" class="btn btn-outline-danger"> 
+                    Delete post 
+                  </a> 
+                  {% endif %}
+                </td>
+                <td>
+                  {% if user.username == element.author %}
+                  <a href="{{url_for('update_blog', ID_POST=element.id)}}" class="btn btn-outline-primary"> 
+                    Update post 
+                  </a>
+                  {% endif %}
+                </td> 
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </body>
 </html>
