@@ -1,7 +1,4 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField, validators
-from wtforms.validators import DataRequired, InputRequired, Length
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin, BaseView, expose, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
@@ -10,10 +7,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from forms import *
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://atfnddwz:2I2TzQNE4YlFPhC1kd1kUCsNsxSeH6uX@balarama.db.elephantsql.com/atfnddwz" 
-# I decided to switch to postgresql database system here insteda of using sqlite
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = "12345678"
 
@@ -29,29 +26,6 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "login"
-
-class RegisterForm(FlaskForm):
-    username = StringField("", validators=[DataRequired()], render_kw={'placeholder': 'username', 'class' : 'form-control'})
-    password = PasswordField("", validators=[DataRequired()], render_kw={'placeholder': 'password', 'class' : 'form-control'})
-    password_repeat = PasswordField("", 
-                                    validators=[DataRequired(), 
-                                    validators.EqualTo('password', message='Password must match')], 
-                                    render_kw={'placeholder': 'repeat password', 'class' : 'form-control'})
-    submit = SubmitField("Enter", render_kw={'class' : 'btn btn-primary form-control '})
-
-class LoginForm(FlaskForm):
-    username = StringField("", validators=[DataRequired()], render_kw={'placeholder': 'username', 'class' : 'form-control'})
-    password = PasswordField("", validators=[DataRequired()], render_kw={'placeholder' : 'password', 'class' : 'form-control'})
-    submit = SubmitField("Enter", render_kw={'class' : 'btn btn-primary form-control '})
-
-class NoteForm(FlaskForm):
-    text = TextAreaField("Text", validators=[DataRequired()], render_kw={"rows": 4, "cols": 30, 'class' : 'form-control'})
-    submit = SubmitField("Submit", render_kw={'class' : 'btn btn-primary'})
-
-class PostForm(FlaskForm):
-    title = StringField("Title", validators=[DataRequired()], render_kw={'class' : 'form-control'})
-    text = TextAreaField("Text", validators=[DataRequired()], render_kw={"rows": 10, "cols": 30, 'class' : 'form-control'})
-    submit = SubmitField("Submit", render_kw={'class' : 'btn btn-primary'})
 
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -97,6 +71,9 @@ class User(UserMixin, db.Model):
     note = db.relationship('Note', backref='user') # One to many
     comments = db.relationship('Comment', backref='user')
     posts = db.relationship('Post', backref='user') 
+    def showdate(self):
+        formatted_date = self.date_joined.strftime("%d %B %Y")
+        return f"{formatted_date}"
     def __repr__(self):
         return f"<{self.username}>"
 
@@ -167,12 +144,7 @@ def profile():
         db.session.add(newPost)
         db.session.commit()
         return redirect(url_for('blog', ID_POST=newPost.id))
-    return render_template('dashboard.html', tempuser=current_user, form=form, list=list_posts)
-
-""" @app.route('/dashboard')
-@login_required 
-def dashboard():
-    return render_template("dashboard.html") """
+    return render_template('dashboard.html', form=form, list=list_posts)
 
 @app.route('/logout')
 @login_required
