@@ -41,20 +41,15 @@
       {% for message in get_flashed_messages() %}
       <div class="alert alert-success">{{ message }}</div>
       {% endfor %}
-      <h1>Welcome {{tempuser.username}}</h1>
-      <!-- {% with messages = get_flashed_messages() %} {% if messages %}
-        <script>
-          alert("{{ messages[0] }}");
-        </script>
-        {% endif %} {% endwith %} -->
+      <h1> Your profile </h1>
       <div class="row">
         <div class="col">
           <div class="card">
             <div class="card-header">{{current_user.username}}</div>
             <div class="card-body">
               <h5 class="card-title">About yourself</h5>
-              <strong>Username: </strong> {{current_user.username}} <br>
-              <strong>Date Joined</strong> {{current_user.date_joined}} <br>
+              <strong>Username: </strong> {{ current_user.username }} <br>
+              <strong>Date Joined</strong> {{ current_user.showdate() }} <br>
               <a href="/logout" class="btn btn-danger">Logout</a>
               <!-- <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
                 <a href="#" class="btn btn-primary">Go somewhere</a> -->

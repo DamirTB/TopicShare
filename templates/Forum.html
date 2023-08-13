@@ -34,7 +34,7 @@
     </nav>
     <div class="container">
       <table class="table">
-        <thead>
+        <thead class="thead-dark">
           <tr>
             <th scope="col">Title</th>
             <th scope="col">Author</th>
@@ -55,14 +55,14 @@
               <td>{{element.showtime()}}</td>
                 <td> 
                   {% if user.username == element.author %}
-                  <a href="{{url_for('delete_blog', ID_POST=element.id)}}" class="btn btn-outline-danger"> 
+                  <a href="{{url_for('delete_blog', ID_POST=element.id)}}" class="btn btn-outline-danger btn-sm"> 
                     Delete post 
                   </a> 
                   {% endif %}
                 </td>
                 <td>
                   {% if user.username == element.author %}
-                  <a href="{{url_for('update_blog', ID_POST=element.id)}}" class="btn btn-outline-primary"> 
+                  <a href="{{url_for('update_blog', ID_POST=element.id)}}" class="btn btn-outline-primary btn-sm"> 
                     Update post 
                   </a>
                   {% endif %}
