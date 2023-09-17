@@ -5,21 +5,12 @@ from flask_admin.contrib.sqla import ModelView
 from flask_login import UserMixin, LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
 from forms import *
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://atfnddwz:2I2TzQNE4YlFPhC1kd1kUCsNsxSeH6uX@balarama.db.elephantsql.com/atfnddwz" 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = "12345678"
-
-limiter = Limiter(
-    get_remote_address,
-    app=app,
-    default_limits=["100 per minute"],
-    storage_uri="memory://",
-) 
 
 db = SQLAlchemy(app)
 
@@ -67,7 +58,6 @@ def too_many_request(e):
     return "Too many request"
 
 @app.route('/login', methods=['GET', 'POST'])
-@limiter.limit('100 per hour')
 def login():
     if current_user.is_authenticated:
         return redirect(url_for('profile'))
