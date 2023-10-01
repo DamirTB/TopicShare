@@ -33,6 +33,11 @@
       </div>
     </nav>
     <div class="container">
+      <form method="POST">
+        {{ form.hidden_tag() }}
+        {{ form.title.label }}
+        {{ form.title() }}
+      </form>
       <table class="table">
         <thead class="thead-dark">
           <tr>
@@ -54,14 +59,14 @@
               <td>{{element.author}}</td>
               <td>{{element.showtime()}}</td>
                 <td> 
-                  {% if user.username == element.author %}
+                  {% if current_user.username == element.author %}
                   <a href="{{url_for('delete_blog', ID_POST=element.id)}}" class="btn btn-outline-danger btn-sm"> 
                     Delete post 
                   </a> 
                   {% endif %}
                 </td>
                 <td>
-                  {% if user.username == element.author %}
+                  {% if current_user.username == element.author %}
                   <a href="{{url_for('update_blog', ID_POST=element.id)}}" class="btn btn-outline-primary btn-sm"> 
                     Update post 
                   </a>

@@ -1,9 +1,14 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField, validators
-from wtforms.validators import DataRequired, InputRequired, Length
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, validators, SearchField, SelectField
+from wtforms.validators import DataRequired, InputRequired, Length, Email
+
+class SeachPostForm(FlaskForm):
+    title = SearchField("", validators=[DataRequired()], render_kw={'placeholder':'search', 'class':'form-control rounded'})
 
 class RegisterForm(FlaskForm):
     username = StringField("", validators=[DataRequired()], render_kw={'placeholder': 'username', 'class' : 'form-control'})
+    email = StringField('', validators=[DataRequired(), Email()], render_kw={'placeholder': 'email', 'class' : 'form-control'})
+    gender = SelectField('', choices=[('female', 'Female'), ('male', "Male")], render_kw={'class' : 'form-control'})
     password = PasswordField("", validators=[DataRequired()], render_kw={'placeholder': 'password', 'class' : 'form-control'})
     password_repeat = PasswordField("", 
                                     validators=[DataRequired(), 

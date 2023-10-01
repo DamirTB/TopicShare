@@ -43,6 +43,8 @@ class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(200), unique=True, nullable=False)
+    gender = db.Column(db.String(200), default="male")
     date_joined = db.Column(db.DateTime, default=datetime.utcnow)
     note = db.relationship('Note', backref='user') # One to many
     comments = db.relationship('Comment', backref='user')

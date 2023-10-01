@@ -8,7 +8,8 @@ from datetime import datetime
 from forms import *
 
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://atfnddwz:2I2TzQNE4YlFPhC1kd1kUCsNsxSeH6uX@balarama.db.elephantsql.com/atfnddwz" 
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mydb.db"
+#app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://atfnddwz:2I2TzQNE4YlFPhC1kd1kUCsNsxSeH6uX@balarama.db.elephantsql.com/atfnddwz" 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = "12345678"
 
@@ -102,7 +103,7 @@ def register():
     if form.validate_on_submit():
         existing_user = User.query.filter_by(username=form.username.data).first()
         if existing_user is None:
-            new_user = User(username=form.username.data, password=generate_password_hash(form.password.data))
+            new_user = User(username=form.username.data, email=form.email.data, password=generate_password_hash(form.password.data))
             db.session.add(new_user)
             try:
                 db.session.commit()
@@ -115,12 +116,17 @@ def register():
             return redirect(url_for("register"))
     return render_template("register.html", form=form)
 
-@app.route('/Forum')
+@app.route('/Forum', methods=["GET", "POST"])
 def forum():
+    form = SeachPostForm()
     user = current_user
+    if form.validate_on_submit():
+        query = form.title.data
+        post_list = Post.query.filter(Post.title.like("%"+query+"%")).all()
+        return render_template("Forum.html", list=post_list, form=form)
     post_list = Post.query.all()
     post_list.sort(key=lambda x : x.timestamp, reverse=True)
-    return render_template("Forum.html", list=post_list, user=user)
+    return render_template("Forum.html", list=post_list, form=form)
 
 @app.route('/Forum/<ID_POST>', methods=["GET", "POST"])
 def blog(ID_POST):
