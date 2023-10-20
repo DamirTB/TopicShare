@@ -5,13 +5,15 @@ from flask_admin.contrib.sqla import ModelView
 from flask_login import UserMixin, LoginManager, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+from dotenv import load_dotenv
 from forms import *
+import os
 
+load_dotenv()
 app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mydb.db"
-#app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://atfnddwz:2I2TzQNE4YlFPhC1kd1kUCsNsxSeH6uX@balarama.db.elephantsql.com/atfnddwz" 
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SECRET_KEY"] = "12345678"
+app.config["SECRET_KEY"] = os.getenv('SECRET_KEY')
 
 db = SQLAlchemy(app)
 
