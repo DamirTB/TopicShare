@@ -6,11 +6,23 @@ from flask_login import UserMixin, LoginManager, login_user, login_required, log
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from dotenv import load_dotenv
+from flask_mail import Mail, Message
 from forms import *
 import os
 
 load_dotenv()
 app = Flask(__name__)
+
+app.config.update(
+    MAIL_SERVER=os.getenv("MAIL_SERVER"), 
+    MAIL_PORT=os.getenv("MAIL_PORT"),
+    MAIL_USE_SSL=os.getenv("MAIL_USE_SSL"),
+    MAIL_USERNAME=os.getenv("MAIL_USERNAME"),
+    MAIL_PASSWORD=os.getenv("MAIL_PASSWORD")
+)
+
+mail = Mail(app)
+
 app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("SQLALCHEMY_DATABASE_URI")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SECRET_KEY"] = os.getenv('SECRET_KEY')
@@ -38,7 +50,7 @@ admin = Admin(app, template_mode='bootstrap4', index_view=Dashboardview())
 admin.add_view(ModelView(User, db.session, name="Users"))
 admin.add_view(ModelView(Post, db.session, name="Posts"))
 admin.add_view(ModelView(Comment, db.session, name="Comments"))
-admin.add_view(Anypageview(name="Something else"))
+admin.add_view(Anypageview(name="Pages of the website"))
 
 @login_manager.user_loader
 def load_user(user_id):
@@ -169,6 +181,16 @@ def update_blog(ID_POST):
     form.title.data = current_post.title
     form.text.data = current_post.text
     return render_template('edit_post.html', form=form)
+
+@app.route('/sendemail')
+def send_mail():
+    msg = mail.send_message(
+        "Send Mail Tutorial",
+        sender=os.getenv("MAIL_USERNAME"),
+        recipients=['talipovdb@gmail.com'],
+        body="Testing sending"
+    )
+    return "Testing the function of sending emails"
 
 if __name__=="__main__":
     app.run(host="0.0.0.0", port=80)

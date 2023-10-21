@@ -2,6 +2,13 @@
 
 {% block body %}
 
-<a href="{{url_for('index')}}">Main menu</a>
-
+<div class="container">
+    <ul>
+        <li><a href="{{url_for('index')}}">Main menu</a></li>
+        <li><a href="{{url_for('forum')}}">Forum</a></li>
+        <li><a href="{{url_for('register')}}">Register</a></li>
+        <li><a href="{{url_for('login')}}">Login</a></li>
+        <li><a href="{{url_for('profile')}}">Profile</a></li>
+    </ul>
+</div>
 {% endblock body %}
