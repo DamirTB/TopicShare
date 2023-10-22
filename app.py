@@ -52,6 +52,14 @@ admin.add_view(ModelView(Post, db.session, name="Posts"))
 admin.add_view(ModelView(Comment, db.session, name="Comments"))
 admin.add_view(Anypageview(name="Pages of the website"))
 
+def send_mail(Message, UserMail, Body):
+    msg = mail.send_message(
+        Message,
+        sender=os.getenv("MAIL_USERNAME"),
+        recipients=[UserMail],
+        body=Body
+    )
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -122,6 +130,7 @@ def register():
             try:
                 db.session.commit()
                 login_user(new_user)
+                send_mail(Message="You successfully registered!", UserMail=new_user.email, Body="You're a new user! Try out the features of the application, and contact me if you have some suggestions")
                 return redirect(url_for('profile'))
             except:
                 db.session.rollback()
@@ -181,16 +190,6 @@ def update_blog(ID_POST):
     form.title.data = current_post.title
     form.text.data = current_post.text
     return render_template('edit_post.html', form=form)
-
-@app.route('/sendemail')
-def send_mail():
-    msg = mail.send_message(
-        "Send Mail Tutorial",
-        sender=os.getenv("MAIL_USERNAME"),
-        recipients=['talipovdb@gmail.com'],
-        body="Testing sending"
-    )
-    return "Testing the function of sending emails"
 
 if __name__=="__main__":
     app.run(host="0.0.0.0", port=80)
