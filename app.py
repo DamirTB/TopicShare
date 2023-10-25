@@ -191,5 +191,11 @@ def update_blog(ID_POST):
     form.text.data = current_post.text
     return render_template('edit_post.html', form=form)
 
+@app.route('/token')
+@login_required
+def token():
+    token = current_user.gen_token()
+    return token
+
 if __name__=="__main__":
     app.run(host="0.0.0.0", port=80)

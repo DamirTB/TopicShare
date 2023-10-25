@@ -1,7 +1,10 @@
 from app import db
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin
-from datetime import datetime
+from datetime import datetime, timedelta
+from dotenv import load_dotenv
+import jwt
+import os
 
 class Note(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -49,6 +52,9 @@ class User(UserMixin, db.Model):
     note = db.relationship('Note', backref='user') # One to many
     comments = db.relationship('Comment', backref='user')
     posts = db.relationship('Post', backref='user') 
+    def gen_token(self):
+        token = jwt.encode({'username': self.username}, os.getenv("SECRET_KEY"), algorithm='HS256')
+        return token
     def showdate(self):
         formatted_date = self.date_joined.strftime("%d %B %Y")
         return f"{formatted_date}"
