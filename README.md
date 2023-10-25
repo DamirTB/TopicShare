@@ -18,11 +18,13 @@ TopicShare is a web application developed using the Flask framework. It serves a
    ```
    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///mydb.db"
    ```
-  3. Create an image 
+  3. Configure mail sender 
+    [Ready-made configure list](https://www.fastmail.help/hc/en-us/articles/1500000278342)
+  4. Create an image 
   ```
     docker build . -t flask
   ```
-  4. Then create a container of that image and run it 
+  5. Then create a container of that image and run it 
   ```
     docker run -p 3000:80 flask
   ```
